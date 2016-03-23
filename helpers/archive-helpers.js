@@ -42,7 +42,9 @@ exports.addUrlToList = function(url, cb) {
   fs.appendFile(exports.paths.list, url + '\n', cb);
 };
 
-exports.isUrlArchived = function() {
+exports.isUrlArchived = function(url, cb) {
+  var filePath = exports.paths.archivedSites + '/' + url;
+  fs.exists(filePath, cb);   
 };
 
 exports.downloadUrls = function() {
