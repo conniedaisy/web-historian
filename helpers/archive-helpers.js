@@ -38,7 +38,8 @@ exports.isUrlInList = function(url, cb) {
   });
 };
 
-exports.addUrlToList = function() {
+exports.addUrlToList = function(url, cb) {
+  fs.appendFile(exports.paths.list, url + '\n', cb);
 };
 
 exports.isUrlArchived = function() {
