@@ -32,7 +32,10 @@ exports.readListOfUrls = function(cb) {
   });
 };
 
-exports.isUrlInList = function() {
+exports.isUrlInList = function(url, cb) {
+  exports.readListOfUrls(function(sites) {
+    cb(sites.indexOf(url) > -1); 
+  });
 };
 
 exports.addUrlToList = function() {
