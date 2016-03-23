@@ -26,12 +26,8 @@ exports.initialize = function(pathsObj) {
 // modularize your code. Keep it clean!
 
 exports.readListOfUrls = function(cb) {
-  console.log("i'm here");
-  console.log(exports.paths.list);
   fs.readFile(exports.paths.list, function(err, data) {
-    console.log(data);
     var sites = data.toString('utf8').split('\n');
-    console.log('sites: ' + sites);
     cb(sites);
   });
 };
