@@ -29,7 +29,6 @@ exports.handleRequest = function (req, res) {
     res.end('in process');
   } else if (req.method === 'GET') {
     var url = req.url.slice(1);
-    console.log(url);
     var filePath = archive.paths.archivedSites + '/' + url;
 
     console.log(filePath);
