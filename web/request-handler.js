@@ -16,7 +16,6 @@ var readPost = function(req, res, cb) {
 
 exports.handleRequest = function (req, res) {
   if (req.url === '/' && req.method === 'GET') {
-    console.log('test');
     var fileName = path.join(__dirname, 'public/index.html');
     var readStream = fs.createReadStream(fileName);
     readStream.pipe(res);
@@ -29,12 +28,9 @@ exports.handleRequest = function (req, res) {
     res.end('in process');
   } else if (req.method === 'GET') {
     var url = req.url.slice(1);
-    var filePath = archive.paths.archivedSites + '/' + url;
-
-    console.log(filePath);
-    // check if exits
-    fs.exists(filePath, function(exists) {
+    archive.isUrlArchived(url, function(exists) {
       if (exists) {
+        var filePath = archive.paths.archivedSites + '/' + url;
         res.writeHead(200);
         var readStream = fs.createReadStream(filePath);
         readStream.pipe(res);
@@ -42,7 +38,7 @@ exports.handleRequest = function (req, res) {
         res.writeHead(404, headers);
         res.end('file not found');
       }
-    });   
+    });  
   } else {
     res.end(archive.paths.list);
   }
