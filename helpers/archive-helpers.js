@@ -11,7 +11,7 @@ var request = require('request');
  * customize it in any way you wish.
  */
 
- exports.paths = {
+exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
@@ -51,26 +51,9 @@ exports.isUrlArchived = function(url, cb) {
 
 exports.downloadUrls = function(list) {
   for (var i = 0; i < list.length; i++) {
-    // var hostName = list[i];
-    // var options = {
-    //   host: 'http://www.hackreactor.com', 
-    //   port: 80,
-    // };
-    // http.get(options, function(res) {
-    //   var body = '';
-    //   res.on('data', function(chunk) {
-    //     body += chunk;
-    //   });
-    //   res.on('end', function() {
-    //   });
-    // }).on('error', function(err) {
-    //   console.log(err);
-    // });
-
-    request('http://www.google.com', function(err, res, body) {
-      console.log(res.statusCode);
-      if (err) console.log(err);
-      console.log(body);
+    var name = list[i];
+    request('http://' + list[i], function(err, res, body) {
+      fs.writeFile(exports.paths.archivedSites + '/' + name, body);
     });
   }
 };
