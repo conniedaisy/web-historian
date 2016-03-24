@@ -1,6 +1,8 @@
 var fs = require('fs');
 var path = require('path');
 var _ = require('underscore');
+var http = require('http');
+var request = require('request');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -9,7 +11,7 @@ var _ = require('underscore');
  * customize it in any way you wish.
  */
 
-exports.paths = {
+ exports.paths = {
   siteAssets: path.join(__dirname, '../web/public'),
   archivedSites: path.join(__dirname, '../archives/sites'),
   list: path.join(__dirname, '../archives/sites.txt')
@@ -47,5 +49,28 @@ exports.isUrlArchived = function(url, cb) {
   fs.exists(filePath, cb);   
 };
 
-exports.downloadUrls = function() {
+exports.downloadUrls = function(list) {
+  for (var i = 0; i < list.length; i++) {
+    // var hostName = list[i];
+    // var options = {
+    //   host: 'http://www.hackreactor.com', 
+    //   port: 80,
+    // };
+    // http.get(options, function(res) {
+    //   var body = '';
+    //   res.on('data', function(chunk) {
+    //     body += chunk;
+    //   });
+    //   res.on('end', function() {
+    //   });
+    // }).on('error', function(err) {
+    //   console.log(err);
+    // });
+
+    request('http://www.google.com', function(err, res, body) {
+      console.log(res.statusCode);
+      if (err) console.log(err);
+      console.log(body);
+    });
+  }
 };
