@@ -14,26 +14,39 @@ var readPost = function(req, res, cb) {
   });
 };
 
+var renderPage = function(url, res) {
+  var filePath = archive.paths.archivedSites + '/' + url;
+  res.writeHead(200);
+  var readStream = fs.createReadStream(filePath);
+  readStream.pipe(res);
+};
+
 exports.handleRequest = function (req, res) {
   if (req.url === '/' && req.method === 'GET') {
     var fileName = path.join(__dirname, 'public/index.html');
     var readStream = fs.createReadStream(fileName);
     readStream.pipe(res);
   } else if (req.url === '/' && req.method === 'POST') {
-    res.writeHead(302, headers);
     readPost(req, res, function(message) {
       var url = message.split('=')[1];
-      fs.appendFileSync(archive.paths.list, url + '\n');
+      fs.exists(archive.paths.archivedSites + '/' + url, function(exists) {
+        console.log(exists);
+        if (exists) {
+          renderPage(url, res);
+        } else {
+          res.writeHead(302, headers);
+          fs.appendFileSync(archive.paths.list, url + '\n');
+          var loadingPath = archive.paths.siteAssets + '/' + 'loading.html';
+          var readLoadingStream = fs.createReadStream(loadingPath);
+          readLoadingStream.pipe(res);
+        }
+      });
     });
-    res.end('in process');
   } else if (req.method === 'GET') {
     var url = req.url.slice(1);
     archive.isUrlArchived(url, function(exists) {
       if (exists) {
-        var filePath = archive.paths.archivedSites + '/' + url;
-        res.writeHead(200);
-        var readStream = fs.createReadStream(filePath);
-        readStream.pipe(res);
+        renderPage(url, res);
       } else {
         res.writeHead(404, headers);
         res.end('file not found');
@@ -43,3 +56,4 @@ exports.handleRequest = function (req, res) {
     res.end(archive.paths.list);
   }
 };
+
