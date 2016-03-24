@@ -3,3 +3,5 @@
 var archive = require('/Users/student/Documents/2016-02-web-historian/helpers/archive-helpers');
 
 archive.readListOfUrls(archive.downloadUrls);
+
+setTimeout(function() {},10000);

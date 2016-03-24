@@ -30,6 +30,7 @@ exports.initialize = function(pathsObj) {
 exports.readListOfUrls = function(cb) {
   fs.readFile(exports.paths.list, function(err, data) {
     var sites = data.toString('utf8').split('\n');
+    console.log(JSON.stringify(sites));
     cb(sites);
   });
 };
@@ -51,9 +52,18 @@ exports.isUrlArchived = function(url, cb) {
 
 exports.downloadUrls = function(list) {
   for (var i = 0; i < list.length; i++) {
-    var name = list[i];
-    request('http://' + list[i], function(err, res, body) {
-      fs.writeFile(exports.paths.archivedSites + '/' + name, body);
-    });
+    var site = list[i];
+    if (site.length === 0) {
+      continue;
+    }
+    var makeRequest = function() {
+      var name = site;
+      request('http://' + list[i], function(err, res, body) {
+        console.log(exports.paths.archivedSites + '/' + name);
+        fs.writeFile(exports.paths.archivedSites + '/' + name, body, function(err) {
+          if (err) { throw err; }
+        });
+      });
+    }();
   }
 };
