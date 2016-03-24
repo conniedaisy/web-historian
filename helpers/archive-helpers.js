@@ -32,6 +32,7 @@ exports.readListOfUrls = function(cb) {
     var sites = data.toString('utf8').split('\n');
     console.log(JSON.stringify(sites));
     cb(sites);
+    fs.writeFile(exports.paths.list, '');
   });
 };
 

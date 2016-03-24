@@ -52,8 +52,6 @@ exports.handleRequest = function (req, res) {
         res.end('file not found');
       }
     });  
-  } else {
-    res.end(archive.paths.list);
-  }
+  } 
 };
 
