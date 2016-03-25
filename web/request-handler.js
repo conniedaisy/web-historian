@@ -44,7 +44,7 @@ exports.handleRequest = function (req, res) {
     });
   } else if (req.method === 'GET') {
     var url = req.url.slice(1);
-    archive.isUrlArchived(url, function(exists) {
+    archive.isUrlArchived(url).then(function(exists) {
       if (exists) {
         renderPage(url, res);
       } else {

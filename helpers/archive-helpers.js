@@ -3,6 +3,7 @@ var path = require('path');
 var _ = require('underscore');
 var http = require('http');
 var request = require('request');
+var Promise = require('bluebird');
 
 /*
  * You will need to reuse the same paths many times over in the course of this sprint.
@@ -27,13 +28,16 @@ exports.initialize = function(pathsObj) {
 // The following function names are provided to you to suggest how you might
 // modularize your code. Keep it clean!
 
-exports.readListOfUrls = function(cb) {
-  fs.readFile(exports.paths.list, function(err, data) {
-    var sites = data.toString('utf8').split('\n');
-    console.log(JSON.stringify(sites));
-    cb(sites);
-    fs.writeFile(exports.paths.list, '');
+exports.readListOfUrls = function() {
+  var promise = new Promise(function(resolve, reject) {
+    fs.readFile(exports.paths.list, function(err, data) {
+      var sites = data.toString('utf8').split('\n');
+      fs.writeFile(exports.paths.list, '');
+      if (err) reject(err);
+      resolve(sites);
+    });
   });
+  return promise;
 };
 
 exports.isUrlInList = function(url, cb) {
@@ -47,8 +51,14 @@ exports.addUrlToList = function(url, cb) {
 };
 
 exports.isUrlArchived = function(url, cb) {
-  var filePath = exports.paths.archivedSites + '/' + url;
-  fs.exists(filePath, cb);   
+  var promise = new Promise(function(resolve, reject) {
+    var filePath = exports.paths.archivedSites + '/' + url;
+    fs.exists(filePath, function(exists) {
+      resolve(exists);
+    });   
+  });
+  
+  return promise;
 };
 
 exports.downloadUrls = function(list) {
